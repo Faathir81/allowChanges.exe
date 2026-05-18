@@ -49,6 +49,8 @@ const colors = require('colors');
 
   // 2. War Logic Loop (Run concurrently for all instances)
   const attackPromises = pages.map(async ({ page, name }) => {
+    let hasClickedLobby = false; // Flag untuk mencegah klik berkali-kali pada satu instansi
+    
     try {
       await page.goto(targetUrl);
       console.log(`[${name}] Reached Target URL. Waiting for Queue/Booking...`.gray);
@@ -92,20 +94,26 @@ const colors = require('colors');
         }
 
         // 3. AUTO-CLICK GERBANG ANTREAN (Jika tombol "Artist Presale" aktif di landing page)
-        try {
-          // Mencari tombol/link "Artist Presale" di landing page
-          const artistPresaleBtn = page.locator('a:has-text("Artist Presale"), button:has-text("Artist Presale"), div[role="button"]:has-text("Artist Presale")').first();
-          if (await artistPresaleBtn.isVisible({ timeout: 100 })) {
-             const isDisabled = await artistPresaleBtn.getAttribute('disabled');
-             const hasDisabledClass = (await artistPresaleBtn.getAttribute('class') || '').toLowerCase().includes('disabled');
-             
-             if (!isDisabled && !hasDisabledClass) {
-                await artistPresaleBtn.click({ force: true });
-                console.log(`[${name}] ⚡ Tombol "Artist Presale" AKTIF! Berhasil diklik otomatis!`.green.bold);
-             }
+        if (!hasClickedLobby) {
+          try {
+            // Mencari tombol/link "Artist Presale" di landing page
+            const artistPresaleBtn = page.locator('a:has-text("Artist Presale"), button:has-text("Artist Presale"), div[role="button"]:has-text("Artist Presale")').first();
+            if (await artistPresaleBtn.isVisible({ timeout: 100 })) {
+               const isDisabled = await artistPresaleBtn.getAttribute('disabled');
+               const hasDisabledClass = (await artistPresaleBtn.getAttribute('class') || '').toLowerCase().includes('disabled');
+               
+               if (!isDisabled && !hasDisabledClass) {
+                  hasClickedLobby = true; // Kunci agar tidak klik lagi di instansi ini
+                  await artistPresaleBtn.click({ force: true });
+                  console.log(`[${name}] ⚡ Tombol "Artist Presale" AKTIF! Berhasil diklik otomatis!`.green.bold);
+                  
+                  // Berikan jeda 5 detik setelah klik agar halaman sempat memproses redirect/loading antrean
+                  await page.waitForTimeout(5000);
+               }
+            }
+          } catch (e) {
+            hasClickedLobby = false; // Reset jika gagal klik agar bisa dicoba kembali
           }
-        } catch (e) {
-          // Abaikan jika gagal klik atau tombol belum aktif
         }
       }
 
