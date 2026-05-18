@@ -12,18 +12,16 @@ const colors = require('colors');
   const page = await context.newPage();
 
   // Load config to get target URL (fallback if needed)
-  let targetUrl = 'https://www.loket.com';
-  if (fs.existsSync('./config.json')) {
-    const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
-    targetUrl = config.TARGET_URL || targetUrl;
-  }
+  let targetUrl = 'https://www.tiket.com/login';
+  // We force tiket.com for login baking since the payment gateway is there.
+  // We do not use config.TARGET_URL here because it points to the event landing page.
 
   console.log(`Navigating to: ${targetUrl}`.gray);
   await page.goto(targetUrl);
   
   console.log('\n======================================================'.green);
   console.log('🟢 BROWSER OPENED!'.green);
-  console.log('Please log into your Loket.com account manually.');
+  console.log('Please log into your tiket.com account manually.');
   console.log('Solve any CAPTCHA or OTP needed.');
   console.log('Once you are fully logged in and on the dashboard/home,');
   console.log('come back to this terminal and press ENTER to save the session.');

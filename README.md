@@ -4,7 +4,7 @@
 [![Target](https://img.shields.io/badge/Target-CAT%205-ff69b4?style=for-the-badge)]()
 [![Framework](https://img.shields.io/badge/Framework-Playwright-2e8b57?style=for-the-badge)]()
 
-A tactical, semi-automated ticket-war assistant built with **Playwright (Node.js)**. Designed to secure tickets for *The Weeknd: After Hours Til Dawn Tour Jakarta 2026* at Jakarta International Stadium (JIS) by inject-editing a flaw into the **Loket.com / Queue-it** infrastructure. 
+A tactical, semi-automated ticket-war assistant built with **Playwright (Node.js)**. Designed to secure tickets for *The Weeknd: After Hours Til Dawn Tour Jakarta 2026* at Jakarta International Stadium (JIS) by inject-editing a flaw into the **tiket.com / Queue-it** infrastructure. 
 
 Optimized specifically for a **Multi-Session & Semi-Automation (Handover)** strategy to bypass anti-bot systems seamlessly.
 
@@ -98,6 +98,7 @@ Before starting the script, create a `config.json` file in the root directory to
 ```
 
 ### Parameters Guide:
+- `TARGET_URL`: The gateway URL (e.g., `https://www.theweekndinjakarta.com`) where the date selection button is located.
 - `PRESALE_CODE`: The specific presale access string required to unlock the categories.
 - `TARGET_CATEGORY`: The designated tier label (Regex-ready; accepts variations like `cat 5`, `Cat 5`, or `CAT 5`).
 - `TICKET_COUNT`: Number of tickets to fetch per session context (keep within the vendor limit).

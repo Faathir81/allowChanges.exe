@@ -54,59 +54,68 @@ const colors = require('colors');
       console.log(`[${name}] Reached Target URL. Waiting for Queue/Booking...`.gray);
 
       // -------------------------------------------------------------
-      // CORE VULNERABILITY INJECTION & SELECTOR (Phase 4)
+      // STRATEGI HYBRID (SEMI-AUTO QUEUE BYPASSER)
       // -------------------------------------------------------------
       
-      // A. Mocking: Wait for specific Queue-it elements or the booking button
-      // await page.waitForSelector('.queue-it-cleared', { timeout: 0 }); // Wait indefinitely
+      console.log(`[${name}] URL Monitor Started. Menunggu antrean Queue-it selesai...`.yellow);
+
+      // Loop untuk memantau perubahan URL secara real-time
+      while (true) {
+        await page.waitForTimeout(1000); // Cek setiap detik
+        
+        // Hentikan jika window lain sudah menang duluan
+        if (isSecured) return; 
+
+        const currentUrl = page.url();
+        
+        // Jika URL menunjukkan sudah masuk ke halaman tiket.com dan bukan lagi antrean
+        if (currentUrl.includes('tiket.com') && !currentUrl.includes('queue-it.net')) {
+           console.log(`\n🚀 [${name}] ANTREAN TEMBUS! Masuk ke halaman tiket!`.green.bold);
+           break; // Keluar dari loop pemantauan antrean
+        }
+      }
+
+      if (isSecured) return; // Double check
+
+      isSecured = true; // Mengunci state agar window lain berhenti
+      console.log(`\n🚨 [${name}] JENDELA INI MEMENANGKAN ANTREAN! 🚨`.green.bold);
       
-      // B. Inject Voucher if needed
-      // const voucherInput = page.locator('#voucher-code-input');
-      // if (await voucherInput.isVisible()) {
-      //   await voucherInput.fill(presaleCode);
-      //   await page.locator('#apply-voucher-btn').click();
-      //   console.log(`[${name}] Voucher Injected!`.cyan);
-      // }
+      // Bawa window ke depan
+      await page.bringToFront();
 
-      // C. Regex Tier Selector
-      const regexStr = targetCategory.replace(/\s+/g, '\\s*'); // Ex: "CAT 5" -> "CAT\s*5"
-      const regexPattern = new RegExp(regexStr, 'i');
-      
-      console.log(`[${name}] Scanning for Tier: ${regexPattern}`.yellow);
-      
-      // D. MOCK WAITING & CLICKING:
-      // const targetRow = page.locator('.ticket-row', { hasText: regexPattern });
-      // await targetRow.locator('.increment-btn').click({ clickCount: ticketCount });
-      // await page.locator('#book-now-btn').click();
+      // MENCARI & INJEK VOUCHER (Opsional, dibungkus try-catch agar tidak crash)
+      try {
+        console.log(`[${name}] Mencoba auto-inject kode presale: ${presaleCode}...`.cyan);
+        // Mencari field input yang mengandung kata kode/code/voucher secara umum
+        const voucherInput = page.locator('input[placeholder*="kode"], input[placeholder*="Code"], input[name*="code"], input[id*="voucher"]').first();
+        
+        if (await voucherInput.isVisible({ timeout: 5000 })) {
+          await voucherInput.fill(presaleCode);
+          console.log(`[${name}] ✅ Kode Presale berhasil diisi!`.green);
+        } else {
+          console.log(`[${name}] ⚠️ Kotak kode presale tidak ditemukan otomatis, silakan cek manual.`.yellow);
+        }
+      } catch (err) {
+        // Abaikan error injeksi, karena target utama adalah handover yang mulus
+      }
 
-      // E. Monitor for Success / 15 Minute Hold
-      // await page.waitForSelector('.payment-countdown-timer', { timeout: 0 });
-
-      // -------------------------------------------------------------
-      // SIMULATING A RANDOM SUCCESS FOR DEMO PURPOSES
-      // (TODO: Replace this block with actual DOM monitoring logic)
-      // -------------------------------------------------------------
-      const randomWait = Math.floor(Math.random() * 5000) + 2000;
-      await page.waitForTimeout(randomWait);
-      
-      if (isSecured) return; // Emergency brake check
-
-      console.log(`\n🚨 [${name}] TICKETS SECURED IN CART! 🚨`.green.bold);
-      isSecured = true;
-
-      // 3. Handover & Emergency Brake (Phase 5)
+      // HANDOVER & EMERGENCY BRAKE (Phase 5)
       triggerAlarm();
-      console.log('======================================================'.green);
-      console.log(`🎟️  Proceed to payment in [${name}] window!`.white.bold);
-      console.log('   Other instances will be halted to avoid double booking.');
-      console.log('======================================================\n'.green);
+      console.log('======================================================'.magenta.bold);
+      console.log(`🎟️  AMBIL ALIH SEKARANG DI JENDELA [${name}]!`.white.bold);
+      console.log(`👉  Pilih Kategori: ${targetCategory}`.yellow);
+      console.log(`👉  Pilih Jumlah  : ${ticketCount} Tiket`.yellow);
+      console.log('   Jendela lain otomatis ditutup untuk cegah double booking.');
+      console.log('======================================================\n'.magenta.bold);
 
-      // Keep this context open, close others
+      // Tutup window lain yang kalah cepat
       for (const ctx of contexts) {
         if (ctx !== page.context()) {
           await ctx.close();
         }
       }
+
+      return; // Berhenti memproses script, biarkan manusia yang mengambil alih layar
 
     } catch (e) {
       if (!isSecured) {
