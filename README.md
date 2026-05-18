@@ -1,6 +1,6 @@
-# 👾 Aether-Ticket-Bypasser — Universal Multi-Session Ticket Bot
+# 👾 allowChanges.exe — Universal Multi-Session Ticket Bot
 
-[![Aether Editing](https://img.shields.io/badge/Aether-Automations-blueviolet?style=for-the-badge)]()
+[![allowChanges.exe](https://img.shields.io/badge/allowChanges.exe-Automations-blueviolet?style=for-the-badge)]()
 [![Framework](https://img.shields.io/badge/Framework-Playwright-2e8b57?style=for-the-badge)]()
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)]()
 
@@ -70,8 +70,8 @@ Ensure your hardware environment has the following base dependencies:
 
 1. Clone the repository into your local directory:
    ```bash
-   git clone https://github.com/your-username/aether-ticket-bypasser.git
-   cd aether-ticket-bypasser
+   git clone https://github.com/your-username/allowChanges.exe.git
+   cd allowChanges.exe
    ```
 
 2. Install the automated browser framework dependencies:
