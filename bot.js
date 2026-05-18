@@ -68,8 +68,25 @@ const colors = require('colors');
 
         const currentUrl = page.url();
         
-        // Jika URL menunjukkan sudah masuk ke halaman tiket.com dan bukan lagi antrean
-        if (currentUrl.includes('tiket.com') && !currentUrl.includes('queue-it.net')) {
+        // Kriteria Tembus Antrean:
+        // 1. URL mengarah ke tiket.com atau halaman booking/packages khusus, DAN bukan antrean queue-it
+        const isBookingUrl = (currentUrl.includes('tiket.com') || currentUrl.includes('/booking') || currentUrl.includes('/packages') || currentUrl.includes('/complete')) 
+                             && !currentUrl.includes('queue-it.net') 
+                             && !currentUrl.includes('waitingroom');
+        
+        // 2. ATAU ada elemen visual pemesanan yang aktif di layar (seperti tombol Select, info paket, atau detail pemesanan)
+        let isBookingDOM = false;
+        try {
+          // Mencari tombol "Select", "Pilih", atau tulisan "Packages" / "Complete Your Booking" / "Detail Pemesan" di layar
+          const bookingIndicator = page.locator('button:has-text("Select"), button:has-text("Pilih"), h1:has-text("Packages"), h2:has-text("Packages"), h1:has-text("Complete"), h2:has-text("Complete"), h3:has-text("Complete")').first();
+          if (await bookingIndicator.isVisible({ timeout: 100 })) {
+            isBookingDOM = true;
+          }
+        } catch (e) {
+          // Abaikan error pengecekan DOM agar loop tetap berjalan lancar
+        }
+
+        if (isBookingUrl || isBookingDOM) {
            console.log(`\n🚀 [${name}] ANTREAN TEMBUS! Masuk ke halaman tiket!`.green.bold);
            break; // Keluar dari loop pemantauan antrean
         }
