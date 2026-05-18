@@ -90,6 +90,23 @@ const colors = require('colors');
            console.log(`\n🚀 [${name}] ANTREAN TEMBUS! Masuk ke halaman tiket!`.green.bold);
            break; // Keluar dari loop pemantauan antrean
         }
+
+        // 3. AUTO-CLICK GERBANG ANTREAN (Jika tombol "Artist Presale" aktif di landing page)
+        try {
+          // Mencari tombol/link "Artist Presale" di landing page
+          const artistPresaleBtn = page.locator('a:has-text("Artist Presale"), button:has-text("Artist Presale"), div[role="button"]:has-text("Artist Presale")').first();
+          if (await artistPresaleBtn.isVisible({ timeout: 100 })) {
+             const isDisabled = await artistPresaleBtn.getAttribute('disabled');
+             const hasDisabledClass = (await artistPresaleBtn.getAttribute('class') || '').toLowerCase().includes('disabled');
+             
+             if (!isDisabled && !hasDisabledClass) {
+                await artistPresaleBtn.click({ force: true });
+                console.log(`[${name}] ⚡ Tombol "Artist Presale" AKTIF! Berhasil diklik otomatis!`.green.bold);
+             }
+          }
+        } catch (e) {
+          // Abaikan jika gagal klik atau tombol belum aktif
+        }
       }
 
       if (isSecured) return; // Double check
