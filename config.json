@@ -1,7 +1,7 @@
 {
-  "TARGET_URL": "https://www.theweekndinjakarta.com",
-  "PRESALE_CODE": "4HTDASIA",
-  "TARGET_CATEGORY": "CAT 5",
+  "TARGET_URL": "https://example-ticketing-landingpage.com",
+  "PRESALE_CODE": "YOUR_PRESALE_CODE_HERE",
+  "TARGET_CATEGORY": "CAT 1",
   "TICKET_COUNT": 2,
   "MAX_SESSIONS": 3
 }

@@ -1,64 +1,66 @@
-# 👾 Allow Changes? — WeekndJakarta-TicketBot
+# 👾 Aether-Ticket-Bypasser — Universal Multi-Session Ticket Bot
 
-[![Aether Editing](https://img.shields.io/badge/Aether-Editing-blueviolet?style=for-the-badge)]()
-[![Target](https://img.shields.io/badge/Target-CAT%205-ff69b4?style=for-the-badge)]()
+[![Aether Editing](https://img.shields.io/badge/Aether-Automations-blueviolet?style=for-the-badge)]()
 [![Framework](https://img.shields.io/badge/Framework-Playwright-2e8b57?style=for-the-badge)]()
+[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)]()
 
-A tactical, semi-automated ticket-war assistant built with **Playwright (Node.js)**. Designed to secure tickets for *The Weeknd: After Hours Til Dawn Tour Jakarta 2026* at Jakarta International Stadium (JIS) by inject-editing a flaw into the **tiket.com / Queue-it** infrastructure. 
+A premium, tactical, **semi-automated (hybrid) ticket-war assistant** built with **Playwright (Node.js)**. Designed as a universal, high-concurrency waiting room bypasser to secure high-demand concert and event tickets (across major ticketing networks like **Queue-it, Tiket.com, Loket.com**, etc.) by utilizing isolated browser contexts, session-state baking, and dynamic DOM/URL radars.
 
-Optimized specifically for a **Multi-Session & Semi-Automation (Handover)** strategy to bypass anti-bot systems seamlessly.
+This project is optimized specifically for a **Hybrid Handover Strategy**: allowing automation to handle the hardest parts of the "war" (concurrency, queue bypassing, session persistence, and pre-sale code injection) and transferring control to a human for checkout to avoid any machine-detection bans or payment gateway blocks.
 
 ---
 
-## 🚀 Core Vulnerability Fixes (Key Features)
+## 🚀 Core Architecture & Features
 
-- **Aether Login State (`auth.json`)**: Bakes and locks your authenticated session state (cookies & local storage) on Day-1 night. Completely bypasses high-traffic login bottlenecks, sudden MFA loops, and CAPTCHAs during the zero-hour.
-- **Dimensional Multi-Session (Headed Mode)**: Deploys 3-5 fully isolated browser contexts simultaneously. Since Queue-it randomizes the waiting room pool, spinning up multiple "points of entry" heavily shifts the odds in your favor.
-- **Voucher Validation Injection**: Auto-detects and instantly feeds the unique *Artist Presale* code or the 6-digit BCA card identifier into the gateway fields the millisecond the queue clears.
-- **Regex-Hardened Tier Selector**: Uses a case-insensitive regular expression matcher (`/cat\s*5/i`) to safely lock onto the **CAT 5** tier, making it immune to any sudden label or structural re-formatting by the promoter.
-- **Emergency Brake & Handover**: The bot terminates its loop and triggers an audio cue immediately after securing the tickets in the cart (*15-minute Booking Hold*), letting a human safely handle the payment gateway.
+- **Authentication State Baking (`auth.json`)**: Pre-authenticates your account during calm hours, extracting and saving active session cookies & local storage. During the zero-hour, it injects these tokens instantly into fresh sandboxed browsers, completely bypassing high-traffic login bottlenecks, MFA loops, and sudden OTP/CAPTCHA challenges.
+- **Dimensional Multi-Session (Kage Bunshin Mode)**: Deploys 3-5 fully isolated browser contexts concurrently. Since modern digital waiting rooms (like Queue-it) randomize the placement pool, spinning up multiple "points of entry" heavily skews the randomized queue odds in your favor.
+- **Lobby Click-Lock Pattern**: Automatically monitors the event landing page. The exact millisecond the "Join Waiting Room" or "Artist Presale" button becomes active/clickable, the bot clicks it in 0.01 seconds across all instances, locking exactly once per instance to avoid duplicate tabs or infinite-clicking loops.
+- **Hybrid DOM & URL Radar**: Real-time background observer monitors the address bar and page elements (checking for `"Select"`, `"Pilih"`, `"Packages"`, or checkout headers) to catch successful queue clearances instantly.
+- **Emergency Brake & Alarm Handover**: Immediately upon securing a queue bypass, the bot sounds a loud terminal audio cue (`\x07`), pulls the successful browser to the front, and halts/terminates other losing browser contexts to prevent double bookings.
 
 ---
 
 ## 📐 System Workflow
 
 ```text
-[ DAY-1 NIGHT: Data Baking ]
-     Account + Verification ──> Run login.js ──> Save State to auth.json
+[ PRE-WAR PHASE: Authentication State Baking ]
+     Open login.js ──> Log in manually once ──> Extract cookies & tokens ──> Save auth.json
 
-[ WAR DAY: Zero Hour (09:45 AM WIB) ]
-     Run bot.js ──> Core Load (auth.json & config.json)
-                        │
-                        ├──> Instance Alpha   (Isolated Profile) ──┐
-                        ├──> Instance Beta    (Isolated Profile) ──┼─> Enter Queue-it Waiting Room
-                        └──> Instance Gamma   (Isolated Profile) ──┘
-                                               │
-                                    [ Queue System Clears ]
-                                               │
-                                               ▼
-                                  Auto-Inject Presale Voucher
-                                               │
-                                               ▼
-                                   Targeting Tier: CAT 5
-                                               │
-                                               ▼
-                                     Execute "Book Now"
-                                               │
-                                               ▼
-                                  [ 15-MIN COUNTDOWN DETECTED ]
-                                               │
-                                               ▼
+[ WAR ZERO-HOUR: Initialization ]
+     Run bot.js ──> Load state (auth.json & config.json)
+                         │
+                         ├──> Instance Alpha   (Isolated Profile + Cookies) ──┐
+                         ├──> Instance Beta    (Isolated Profile + Cookies) ──┼─> Enter Pre-Queue
+                         └──> Instance Gamma   (Isolated Profile + Cookies) ──┘
+                                                │
+                                    [ Queue Opens / Randomizes ]
+                                                │
+                                                ▼
+                                    Instant Lobby Button Click
+                                                │
+                                                ▼
+                                    Monitor Real-time Queue
+                                                │
+                                      [ Queue Bypass Success ]
+                                                │
+                                                ▼
+                                    Auto-Inject Presale Code
+                                                │
+                                                ▼
+                                    Bring Winner Window to Front
+                                                │
+                                                ▼
                                   Force Halt Bot + Trigger Alarm
-                                               │
-                                               ▼
-                                   Manual Handover for Checkout
+                                                │
+                                                ▼
+                                    Manual Checkout & Payment
 ```
 
 ---
 
 ## 🛠️ Prerequisites
 
-Ensure your hacking rig has the following base dependencies installed:
+Ensure your hardware environment has the following base dependencies:
 - [Node.js](https://nodejs.org/) (Version 18 or higher)
 - npm (Node Package Manager)
 
@@ -68,16 +70,16 @@ Ensure your hacking rig has the following base dependencies installed:
 
 1. Clone the repository into your local directory:
    ```bash
-   git clone [https://github.com/username/allow-changes.git](https://github.com/username/allow-changes.git)
-   cd allow-changes
+   git clone https://github.com/your-username/aether-ticket-bypasser.git
+   cd aether-ticket-bypasser
    ```
 
-2. Install the necessary automated browser dependencies:
+2. Install the automated browser framework dependencies:
    ```bash
    npm install
    ```
 
-3. Download the specific Chromium binaries required by Playwright:
+3. Download the specific Chromium browser binaries required by Playwright:
    ```bash
    npx playwright install chromium
    ```
@@ -86,46 +88,47 @@ Ensure your hacking rig has the following base dependencies installed:
 
 ## ⚙️ Configuration (`config.json`)
 
-Before starting the script, create a `config.json` file in the root directory to declare your session parameters:
+Before starting the scripts, create a `config.json` file in the root directory to declare your session parameters:
 
 ```json
 {
-  "PRESALE_CODE": "YOUR_UNIQUE_ARTIST_OR_BCA_CODE",
-  "TARGET_CATEGORY": "CAT 5",
+  "TARGET_URL": "https://example-ticketing-landingpage.com",
+  "PRESALE_CODE": "YOUR_PRESALE_CODE_HERE",
+  "TARGET_CATEGORY": "CAT 1",
   "TICKET_COUNT": 2,
   "MAX_SESSIONS": 3
 }
 ```
 
 ### Parameters Guide:
-- `TARGET_URL`: The gateway URL (e.g., `https://www.theweekndinjakarta.com`) where the date selection button is located.
-- `PRESALE_CODE`: The specific presale access string required to unlock the categories.
-- `TARGET_CATEGORY`: The designated tier label (Regex-ready; accepts variations like `cat 5`, `Cat 5`, or `CAT 5`).
-- `TICKET_COUNT`: Number of tickets to fetch per session context (keep within the vendor limit).
-- `MAX_SESSIONS`: Number of concurrent browser instances (recommended: 3 to avoid triggering IP-based DDoS filters).
+- `TARGET_URL`: The entrypoint URL of the ticketing or event landing page where the queue selection or dates are located.
+- `PRESALE_CODE`: The unique pre-sale access string required to unlock protected ticketing tiers.
+- `TARGET_CATEGORY`: The designated ticket tier label (regex-ready; e.g., `/cat\s*1/i` will match "cat 1", "Cat 1", "CAT 1").
+- `TICKET_COUNT`: Number of tickets to request.
+- `MAX_SESSIONS`: Number of concurrent browser instances (recommended: 3 to avoid triggering IP-based DDoS firewalls).
 
 ---
 
 ## 🏃‍♂️ Operation Manual
 
-### Step 1: Bake the Authentication Context (May 17th — Evening)
-Run the isolated login environment to authenticate your session state safely before servers get overloaded.
+### Step 1: Bake the Authentication Context (Pre-War)
+Run the isolated login environment to authenticate your session state safely before the servers get overloaded.
 
 ```bash
 node login.js
 ```
-*A native browser window will execute. Log into the promoter platform manually, clear any necessary security checks or OTPs, and navigate to the dashboard. Return to the terminal and save to write the encrypted session tokens into `auth.json`.*
+*A native browser window will execute. Log into the target ticketing platform manually, complete any security challenges or OTPs, and navigate to the home dashboard. Return to the terminal and press `ENTER` to write the verified session state tokens into `auth.json`.*
 
-### Step 2: Initialize the Injection Loop (May 18th — 09:45 AM WIB)
-Boot up the multi-layered instances roughly 15 minutes prior to the general ticket release window.
+### Step 2: Initialize the Bypasser Loop (Zero-Hour)
+Launch the multi-layered instances roughly 15-30 minutes prior to the general ticket release window to sit in the pre-queue.
 
 ```bash
 node bot.js
 ```
-*The script will spin up isolated, headed Chrome windows utilizing the session state generated during Step 1. The moment an instance breaks through the virtual waiting room, it will instantly process the presale code, select CAT 5, append the ticket count, and lock down the reservation. Once the 15-minute countdown clock initializes, the bot sounds the alert and transfers access back to the hardware operator.*
+*The script will spin up isolated, headed Chrome windows loaded with the active login cookies from Step 1. The moment the queue randomizer triggers and one of your contexts clears the queue, the bot instantly injects the pre-sale code, triggers a loud repeating alarm, pulls the winning window to the front, closes the losing tabs, and hands complete manual control over to you for choosing the tier and finalizing checkout.*
 
 ---
 
 ## ⚠️ Disclaimer
 
-This project is created **strictly for educational and technical research purposes** to analyze browser automation and web infrastructure performance under simulated high-concurrency loads using Playwright. Automated scripts may violate the Terms of Service of specific ticketing networks. The developer assumes absolutely no liability for account suspensions, transaction errors, or edge-case network drops. Use responsibly at your own risk.
+This project is created **strictly for educational, technical research, and archival purposes** to study high-concurrency browser automation, session persistence patterns, and web platform architecture performance under simulated high-load environments using Playwright. Automated purchasing or queue-bypassing may violate the Terms of Service of specific ticketing networks. The developer assumes absolutely no liability for account suspensions, transaction failures, or edge-case network drops. Use responsibly at your own risk.
